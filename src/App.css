@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+.todo-list button {
+  margin-left: 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 2px 5px;
+  cursor: pointer;
+}
+
+.todo-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.strike-through {
+  text-decoration: line-through;
+}

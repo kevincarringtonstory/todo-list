@@ -1,13 +1,40 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 function App() {
-  let [todos, setTodos] = useState([]);
-  let [input, setInput] = useState('');
+  const [todos, setTodos] = useState([]);
+  const [input, setInput] = useState('');
 
-  const AddTodo = () => {
-    setTodos([...todos, input]);
-    console.log(todos);
+  let completedTodos = todos.filter((todo) => todo.status === 'complete');
+  let incompletedTodos = todos.filter((todo) => todo.status === 'incomplete');
+
+  const setChecked = (indexToBeChecked, checked) => {
+    if (checked) {
+      setTodos(
+        todos.map((todo, index) =>
+          index === indexToBeChecked ? { ...todo, status: 'complete' } : todo
+        )
+      );
+    } else {
+      setTodos(
+        todos.map((todo, index) =>
+          index === indexToBeChecked ? { ...todo, status: 'incomplete' } : todo
+        )
+      );
+    }
+  };
+
+  const addTodo = () => {
+    const trimmedInput = input.trim();
+    if (trimmedInput) {
+      let newObject = { text: trimmedInput, status: 'incomplete' };
+      setTodos([...todos, newObject]);
+      setInput('');
+    }
+  };
+
+  const deleteTodo = (indexToDelete) => {
+    setTodos(todos.filter((_, index) => index !== indexToDelete));
   };
 
   return (
@@ -16,17 +43,36 @@ function App() {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          AddTodo();
-          setInput('');
+          addTodo();
         }}
       >
         <input
+          type="text"
           value={input}
           onChange={(event) => setInput(event.target.value)}
         />
         <button type="submit">Add</button>
       </form>
-      <p>0 todos, (0 incomplete, 0 complete)</p>
+      <ul className="todo-list">
+        {todos.map((todo, index) => (
+          <li
+            key={index}
+            className={todo.status === 'complete' ? 'strike-through' : ''}
+          >
+            <input
+              type="checkbox"
+              checked={todo.status === 'complete'}
+              onChange={(event) => setChecked(index, event.target.checked)}
+            />
+            {todo.text}
+            <button onClick={() => deleteTodo(index)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+      <p>
+        {todos.length} todos, ({incompletedTodos.length} incomplete,{' '}
+        {completedTodos.length} complete)
+      </p>
     </div>
   );
 }
