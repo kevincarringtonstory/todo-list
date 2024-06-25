@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './App.css';
+import AddTodo from './components/addTodo';
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [input, setInput] = useState('');
 
   let completedTodos = todos.filter((todo) => todo.status === 'complete');
   let incompletedTodos = todos.filter((todo) => todo.status === 'incomplete');
@@ -24,12 +24,11 @@ function App() {
     }
   };
 
-  const addTodo = () => {
+  const addTodo = (input) => {
     const trimmedInput = input.trim();
     if (trimmedInput) {
       let newObject = { text: trimmedInput, status: 'incomplete' };
       setTodos([...todos, newObject]);
-      setInput('');
     }
   };
 
@@ -40,19 +39,7 @@ function App() {
   return (
     <div className="App">
       <h1>Todo List</h1>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          addTodo();
-        }}
-      >
-        <input
-          type="text"
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-        />
-        <button type="submit">Add</button>
-      </form>
+      <AddTodo onAddTodo={addTodo} />
       <ul className="todo-list">
         {todos.map((todo, index) => (
           <li
